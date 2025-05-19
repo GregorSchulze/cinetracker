@@ -9,19 +9,22 @@ function Home() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const loadData = async () => {
-      setLoading(true);
-      try {
-        const data = await getPopularMovies();
-        setMovies(data);
-      } catch (err) {
-        setError(err.message || "Failed to load movies");
-      } finally {
-        setLoading(false);
-      }
-    };
+  const loadPopularMovies = async () => {
+    setLoading(true);
+    try {
+      const data = await getPopularMovies();
+      setMovies(data);
+    } catch (err) {
+      setError(err.message || "Failed to load movies");
+    } finally {
+      setLoading(false);
+    }
+
     loadData();
+  };
+
+  useEffect(() => {
+    loadPopularMovies();
   }, []);
 
   const handleSearch = async (e) => {
@@ -38,6 +41,16 @@ function Home() {
       setMovies([]);
     } finally {
       setLoading(false);
+      if (!searchQuery ? loadData() : null) return;
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    setSearchQuery(value);
+
+    if (value === "") {
+      return loadPopularMovies();
     }
   };
 
@@ -53,7 +66,7 @@ function Home() {
               placeholder="Search for Movie..."
               required
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={handleInputChange}
               disabled={loading}
             />
             <button

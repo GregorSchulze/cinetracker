@@ -23,10 +23,10 @@ function MovieCard({ movie }) {
         <div className="absolute inset-0 bg-gradient-to-t from-black opacity-0 group-hover:opacity-90"></div>
         <div className="absolute inset-0  flex justify-center items-end pb-3 opacity-0 group-hover:opacity-100">
           <button
-            className={`text-3xl ${isFavorite ? "text-red-500" : "text-white"}`}
+            className={`text-3xl ${favorite ? "text-red-500" : "text-white"}`}
             onClick={onFavoriteClick}
           >
-            ❤️
+            {`${favorite ? "✅" : "❤️"}`}
           </button>
         </div>
       </div>

@@ -9,8 +9,7 @@ export const getPopularMovies = async () => {
     const data = await response.json();
     return data.results;
   } catch (error) {
-    console.error("API Error:", error);
-    throw error;
+    console.error("Api error:", error);
   }
 };
 
@@ -24,7 +23,6 @@ export const searchMovies = async (query) => {
     const data = await response.json();
     return data.results;
   } catch (error) {
-    console.error("API Error:", error);
-    throw error;
+    console.error("Api error:", error);
   }
 };
