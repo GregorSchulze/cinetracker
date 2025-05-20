@@ -19,8 +19,6 @@ function Home() {
     } finally {
       setLoading(false);
     }
-
-    loadData();
   };
 
   useEffect(() => {
@@ -41,7 +39,7 @@ function Home() {
       setMovies([]);
     } finally {
       setLoading(false);
-      if (!searchQuery ? loadData() : null) return;
+      if (!searchQuery ? loadPopularMovies() : null) return;
     }
   };
 
