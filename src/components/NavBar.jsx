@@ -4,7 +4,7 @@ import "../index.css";
 export default function NavBar() {
   return (
     <>
-      <div className=" bg-gray-100 dark:bg-gray-900  ">
+      <div className=" bg-gray-100 dark:bg-gray-900 p-4 ">
         <nav className="flex justify-between py-4 ">
           <div className="">
             <Link to="/">

@@ -69,7 +69,7 @@ function Home() {
             />
             <button
               type="submit"
-              className="flex gap-2 p-4 text-sm text-white bg-gray-500 dark:bg-gray-800  rounded-r-lg  dark:bg-blue-600 dark:hover:bg-blue-700 "
+              className="flex gap-2 p-4 text-sm text-white bg-gray-500 dark:bg-gray-800  rounded-r-lg"
             >
               <IoSearch className="w-5 h-5" />
 
@@ -113,7 +113,7 @@ function Home() {
       )}
 
       {/* Movies Grid */}
-      <div className="max-w-[1400px] md:max-w-[700] mx-auto mt-12">
+      <div className="  max-w-[1400px] mx-auto mt-12">
         {loading && movies.length === 0 ? (
           <div className="text-center py-12">
             <div className="inline-block animate-spin rounded-full h-8 w-8 "></div>

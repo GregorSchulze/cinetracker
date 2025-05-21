@@ -8,7 +8,7 @@ const Favorites = () => {
     return (
       <div className="">
         {/* <h2>Your Favorites</h2> */}
-        <div className="max-w-[1400px] md:max-w-[700] mx-auto mt-12"></div>
+        <div className="max-w-[1400px] mx-auto mt-12"></div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {favorites.map((movie) => (
             <MovieCard movie={movie} key={movie.id} />
