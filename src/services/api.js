@@ -26,3 +26,39 @@ export const searchMovies = async (query) => {
     console.error("Api error:", error);
   }
 };
+
+export const getMovieVideos = async (movieId) => {
+  try {
+    const response = await fetch(
+      `${BASE_URL}/movie/${movieId}/videos?api_key=${API_KEY}`
+    );
+    const data = await response.json();
+    return data.results;
+  } catch (error) {
+    console.error("Api error:", error);
+  }
+};
+
+export const getGenres = async () => {
+  try {
+    const response = await fetch(
+      `${BASE_URL}/genre/movie/list?api_key=${API_KEY}`
+    );
+    const data = await response.json();
+    return data.genres;
+  } catch (error) {
+    console.error("Api error:", error);
+  }
+};
+
+export const getMovieDetails = async (movieId) => {
+  try {
+    const response = await fetch(
+      `${BASE_URL}/movie/${movieId}?api_key=${API_KEY}`
+    );
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching movie details for ID ${movieId}:", error);
+  }
+};

@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { getGenres } from "../services/api";
 
 const MovieContext = createContext();
 
@@ -9,6 +10,10 @@ export const MovieProvider = ({ children }) => {
     const storedFavorites = localStorage.getItem("favorites");
     return storedFavorites ? JSON.parse(storedFavorites) : [];
   });
+
+  const [genresMap, setGenresMap] = useState({});
+  const [genresLoading, setGenresLoading] = useState(true);
+  const [genresError, setGenresError] = useState(null);
 
   // Favoriten in localStorage speichern
   useEffect(() => {
@@ -29,11 +34,37 @@ export const MovieProvider = ({ children }) => {
     setFavorites(favorites.filter((movie) => movie.id !== movieId));
   };
 
+  // Genres laden
+  useEffect(() => {
+    const fetchGenresData = async () => {
+      setGenresLoading(true);
+      setGenresError(null);
+      try {
+        const genreList = await getGenres();
+        const map = {};
+        genreList.forEach((genre) => {
+          map[genre.id] = genre.name;
+        });
+        setGenresMap(map);
+      } catch (error) {
+        console.error("Fehler beim Laden der Genres:", error);
+      } finally {
+        setGenresLoading(false);
+      }
+    };
+    fetchGenresData();
+  }, []);
+
+  // Filmlänge laden
+
   const value = {
     favorites,
     isFavorite,
     addToFavorites,
     removeFavorites,
+    genresMap,
+    genresLoading,
+    genresError,
   };
 
   return (

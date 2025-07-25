@@ -1,14 +1,19 @@
+// src/pages/Home.jsx
 import { useState, useEffect } from "react";
 import MovieCard from "../components/MovieCard";
 import { searchMovies, getPopularMovies } from "../services/api";
 import { IoSearch } from "react-icons/io5";
+import ModalTrailer from "../components/ModalTrailer";
 
 function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [movies, setMovies] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedMovie, setSelectedMovie] = useState(null);
 
+  // Filme laden
   const loadPopularMovies = async () => {
     setLoading(true);
     try {
@@ -25,6 +30,7 @@ function Home() {
     loadPopularMovies();
   }, []);
 
+  // Suchfunktion
   const handleSearch = async (e) => {
     e.preventDefault();
     if (!searchQuery.trim()) return;
@@ -39,7 +45,6 @@ function Home() {
       setMovies([]);
     } finally {
       setLoading(false);
-      if (!searchQuery ? loadPopularMovies() : null) return;
     }
   };
 
@@ -52,9 +57,25 @@ function Home() {
     }
   };
 
+  // // Genre Filterung
+  // const handleGenreFilter = (genreId) => {
+  //   if (!genreId) {
+  //     return loadPopularMovies();
+  //   }
+
+  // Modal-Funktionen
+  const openModalWithMovie = (movie) => {
+    setSelectedMovie(movie);
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+    setSelectedMovie(null);
+  };
+
   return (
     <div className=" bg-gray-100 dark:bg-gray-900 p-4">
-      {/* Search Form */}
       <div className="max-w-4xl mx-auto">
         <form onSubmit={handleSearch} className="max-w-sm mx-auto mt-8">
           <div className="flex">
@@ -72,7 +93,6 @@ function Home() {
               className="flex gap-2 p-4 text-sm text-white bg-gray-500 dark:bg-gray-800  rounded-r-lg"
             >
               <IoSearch className="w-5 h-5" />
-
               {loading ? (
                 <span className="flex items-center justify-center">
                   <svg
@@ -105,7 +125,6 @@ function Home() {
         </form>
       </div>
 
-      {/* Error Message */}
       {error && (
         <div className="max-w-sm mx-auto mt-4 p-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800">
           {error}
@@ -113,7 +132,7 @@ function Home() {
       )}
 
       {/* Movies Grid */}
-      <div className="  max-w-[1400px] mx-auto mt-12">
+      <div className="max-w-[1400px] mx-auto mt-12">
         {loading && movies.length === 0 ? (
           <div className="text-center py-12">
             <div className="inline-block animate-spin rounded-full h-8 w-8 "></div>
@@ -121,11 +140,20 @@ function Home() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {movies.map((movie) => (
-              <MovieCard key={movie.id} movie={movie} />
+              <MovieCard
+                key={movie.id}
+                movie={movie}
+                onOpenTrailer={() => openModalWithMovie(movie)}
+              />
             ))}
           </div>
         )}
       </div>
+
+      {/* Modal nur rendern, wenn showModal true ist UND ein Film ausgewählt wurde */}
+      {showModal && selectedMovie && (
+        <ModalTrailer movie={selectedMovie} onClose={closeModal} />
+      )}
     </div>
   );
 }
