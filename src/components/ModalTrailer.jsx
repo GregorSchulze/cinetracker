@@ -183,7 +183,7 @@ function ModalTrailer({ movie, onClose }) {
           </div>
 
           {/* Film-Details */}
-          <div className="space-y-4">
+          <div className="space-y-">
             <div>
               <h4 className="text-xl font-semibold mb-2">Beschreibung:</h4>
               <p className="text-gray-300 text-base">
