@@ -1,26 +1,28 @@
-// src/pages/Home.jsx
 import { useState, useEffect } from "react";
 import MovieCard from "../components/MovieCard";
 import { searchMovies, getPopularMovies } from "../services/api";
 import { IoSearch } from "react-icons/io5";
 import ModalTrailer from "../components/ModalTrailer";
+import { Movie } from "../lib/types";
 
 function Home() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [movies, setMovies] = useState([]);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [showModal, setShowModal] = useState(false);
-  const [selectedMovie, setSelectedMovie] = useState(null);
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [movies, setMovies] = useState<Movie[]>([]);
+  const [error, setError] = useState<Error | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
 
   // Filme laden
   const loadPopularMovies = async () => {
     setLoading(true);
     try {
-      const data = await getPopularMovies();
+      const data: Movie[] = await getPopularMovies();
       setMovies(data);
     } catch (err) {
-      setError(err.message || "Failed to load movies");
+      if (err instanceof Error) {
+        setError(new Error("Failed to load movies"));
+      }
     } finally {
       setLoading(false);
     }
@@ -31,24 +33,26 @@ function Home() {
   }, []);
 
   // Suchfunktion
-  const handleSearch = async (e) => {
+  const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!searchQuery.trim()) return;
 
     setLoading(true);
     try {
-      const results = await searchMovies(searchQuery);
+      const results: Movie[] = await searchMovies(searchQuery);
       setMovies(results);
       setError(null);
     } catch (err) {
-      setError(err.message || "Search failed");
+      if (err instanceof Error) {
+        setError(new Error("Search failed"));
+      }
       setMovies([]);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchQuery(value);
 
@@ -64,7 +68,7 @@ function Home() {
   //   }
 
   // Modal-Funktionen
-  const openModalWithMovie = (movie) => {
+  const openModalWithMovie = (movie: Movie) => {
     setSelectedMovie(movie);
     setShowModal(true);
   };
@@ -127,7 +131,7 @@ function Home() {
 
       {error && (
         <div className="max-w-sm mx-auto mt-4 p-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800">
-          {error}
+          {error.message}
         </div>
       )}
 

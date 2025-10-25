@@ -1,26 +1,31 @@
-// src/components/ModalTrailer.jsx
-import React, { useState, useEffect } from "react";
-// WICHTIG: Stelle sicher, dass getMovieDetails in deiner api.js existiert und das gesamte Detailobjekt zurückgibt!
-// Falls du sie getMovieLength genannt hast und sie nur die runtime zurückgibt,
-// dann musst du hier 'getMovieLength' importieren und die Logik anpassen.
+import { useState, useEffect } from "react";
 import { getMovieDetails, getMovieVideos } from "../services/api";
 import { IoClose } from "react-icons/io5";
+import { Movie, MovieDetails } from "../lib/types";
 
-function ModalTrailer({ movie, onClose }) {
-  const [trailerUrl, setTrailerUrl] = useState(null);
+interface ModalTrailerProps {
+  movie: Movie;
+  onClose: () => void;
+}
+
+function ModalTrailer({
+  movie,
+  onClose,
+}: ModalTrailerProps): JSX.Element | null {
+  const [trailerUrl, setTrailerUrl] = useState<string | null>(null);
   const [loadingTrailer, setLoadingTrailer] = useState(true);
-  const [trailerError, setTrailerError] = useState(null);
+  const [trailerError, setTrailerError] = useState<string | null>(null);
 
-  const [movieDetails, setMovieDetails] = useState(null); // Speichert das gesamte Detailobjekt
+  const [movieDetails, setMovieDetails] = useState<MovieDetails | null>(null); // Speichert das gesamte Detailobjekt
   const [loadingDetails, setLoadingDetails] = useState(true); // Ladezustand für Filmdetails
-  const [detailsError, setDetailsError] = useState(null); // Fehlerzustand für Filmdetails
+  const [detailsError, setDetailsError] = useState<string | null>(null); // Fehlerzustand für Filmdetails
 
   // Einzelner useEffect für alle API-Abrufe beim Öffnen des Modals
   useEffect(() => {
     if (!movie || !movie.id) {
       setTrailerError("Keine Film-ID verfügbar.");
       setLoadingTrailer(false);
-      setDetailsError("Keine Film-ID verfügbar."); // Auch Details Fehler setzen
+      setDetailsError("Keine Film-ID verfügbar.");
       setLoadingDetails(false);
       return;
     }
@@ -68,20 +73,20 @@ function ModalTrailer({ movie, onClose }) {
       }
     };
 
-    fetchTrailer(); // Rufe Trailer-Funktion auf
-    fetchMovieDetailsData(); // Rufe Details-Funktion auf
-  }, [movie]); // Abhängigkeit von 'movie'
+    fetchTrailer();
+    fetchMovieDetailsData();
+  }, [movie]);
 
   // Schließen des Modals mit ESC-Taste (dieser useEffect ist korrekt)
   useEffect(() => {
-    const handleEsc = (event) => {
+    const handleEsc = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         onClose();
       }
     };
-    window.addEventListener("keydown", handleEsc);
+    window.addEventListener("keydown", handleEsc as EventListener);
     return () => {
-      window.removeEventListener("keydown", handleEsc);
+      window.removeEventListener("keydown", handleEsc as EventListener);
     };
   }, [onClose]);
 
@@ -90,12 +95,12 @@ function ModalTrailer({ movie, onClose }) {
   }
 
   // Formatierung der Bewertung
-  const formatRating = (rating) => {
+  const formatRating = (rating: number | undefined) => {
     return rating ? `${((rating / 10) * 5).toFixed(1)} / 5` : "N/A";
   };
 
   // Formatierung der Filmlänge
-  const formatRuntime = (minutes) => {
+  const formatRuntime = (minutes: number | undefined) => {
     if (typeof minutes !== "number" || minutes <= 0) {
       return "N/A";
     }
@@ -115,7 +120,7 @@ function ModalTrailer({ movie, onClose }) {
   if (loadingTrailer || loadingDetails) {
     return (
       <div
-        tabIndex="-1"
+        tabIndex={-1}
         className="fixed inset-0 z-50 flex justify-center items-center bg-black/80 overflow-y-auto p-4"
         onClick={onClose}
       >
@@ -130,7 +135,7 @@ function ModalTrailer({ movie, onClose }) {
   if (trailerError || detailsError) {
     return (
       <div
-        tabIndex="-1"
+        tabIndex={-1}
         className="fixed inset-0 z-50 flex justify-center items-center bg-black/80 overflow-y-auto p-4"
         onClick={onClose}
       >
@@ -143,7 +148,7 @@ function ModalTrailer({ movie, onClose }) {
 
   return (
     <div
-      tabIndex="-1"
+      tabIndex={-1}
       className="fixed inset-0 z-50 flex justify-center items-center bg-black/80  overflow-y-auto p-4"
       onClick={onClose}
     >
@@ -194,7 +199,7 @@ function ModalTrailer({ movie, onClose }) {
               </p>
             </div>
             {/* NEU: Filmlänge separat anzeigen, korrekt geschachtelt */}
-            {movieDetails?.runtime > 0 && (
+            {movieDetails && movieDetails.runtime > 0 && (
               <div className="flex justify-between items-center">
                 <h4 className="text-xl font-semibold">Laufzeit:</h4>
                 <p className="text-lg font-bold text-gray-300">

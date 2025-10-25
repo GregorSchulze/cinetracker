@@ -1,17 +1,23 @@
 // MovieCard.jsx
 import React from "react";
 import { useMovieContext } from "../context/MovieContext";
+import { Movie } from "../lib/types";
 
 // Icons neu
 import { FaRegBookmark } from "react-icons/fa";
 import { FaBookmark } from "react-icons/fa";
 import { FaPlayCircle } from "react-icons/fa";
 
-function MovieCard({ movie, onOpenTrailer }) {
+interface MovieCardProps {
+  movie: Movie;
+  onOpenTrailer: (movie: Movie) => void;
+}
+
+function MovieCard({ movie, onOpenTrailer }: MovieCardProps): JSX.Element {
   const {
     isFavorite,
     addToFavorites,
-    removeFavorites,
+    removeFromFavorites,
     genresMap,
     genresLoading,
     genresError,
@@ -19,13 +25,13 @@ function MovieCard({ movie, onOpenTrailer }) {
 
   const favorite = isFavorite(movie.id);
 
-  function onFavoriteClick(e) {
+  function onFavoriteClick(e: React.MouseEvent<HTMLButtonElement>) {
     e.stopPropagation(); // Verhindert, dass der Klick auf den Favoriten-Button das Modal öffnet
-    if (favorite) removeFavorites(movie.id);
+    if (favorite) removeFromFavorites(movie.id);
     else addToFavorites(movie);
   }
 
-  const getGenresNames = () => {
+  const getGenresNames = (): string => {
     if (genresLoading) return "Loading genres...";
     if (genresError) return "Error loading genres";
     if (movie.genre_ids && movie.genre_ids.length > 0) {
@@ -37,7 +43,7 @@ function MovieCard({ movie, onOpenTrailer }) {
   };
 
   return (
-    <div className="cursor-pointer" onClick={onOpenTrailer}>
+    <div className="cursor-pointer" onClick={() => onOpenTrailer(movie)}>
       <div className="group relative rounded-md overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300">
         {/* Poster */}
         <img
@@ -70,7 +76,7 @@ function MovieCard({ movie, onOpenTrailer }) {
             className="text-white text-4xl hover:scale-110 transition-transform"
             onClick={(e) => {
               e.stopPropagation();
-              onOpenTrailer();
+              onOpenTrailer(movie);
             }}
           >
             <FaPlayCircle />
@@ -85,9 +91,9 @@ function MovieCard({ movie, onOpenTrailer }) {
         {/* Title */}
         <h3 className="text-lg font-semibold truncate">{movie.title}</h3>
         {/* Release */}
-        <p className="text-sm text-gray-500">
+        {/* <p className="text-sm text-gray-500">
           {movie.release_date?.split("-")[0]}
-        </p>
+        </p> */}
       </div>
     </div>
   );

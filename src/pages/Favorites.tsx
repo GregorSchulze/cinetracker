@@ -1,17 +1,22 @@
 import { useMovieContext } from "../context/MovieContext";
 import MovieCard from "../components/MovieCard";
+import { Movie } from "../lib/types";
 
-const Favorites = () => {
-  const { favorites } = useMovieContext();
+const Favorites = (): JSX.Element => {
+  const { favorites, openModalWithMovie } = useMovieContext();
 
   if (favorites && favorites.length > 0) {
     return (
-      <div className="">
+      <div className="p-4 justify-center">
         {/* <h2>Your Favorites</h2> */}
         <div className="max-w-[1400px] mx-auto mt-12"></div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {favorites.map((movie) => (
-            <MovieCard movie={movie} key={movie.id} />
+          {favorites.map((movie: Movie) => (
+            <MovieCard
+              movie={movie}
+              key={movie.id}
+              onOpenTrailer={() => openModalWithMovie(movie)}
+            />
           ))}
         </div>
       </div>

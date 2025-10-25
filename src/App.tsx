@@ -3,7 +3,19 @@ import Home from "./pages/Home";
 import Favorites from "./pages/Favorites";
 import NavBar from "./components/NavBar";
 import { Route, Routes } from "react-router";
-import { MovieProvider } from "./context/MovieContext";
+import { MovieProvider, useMovieContext } from "./context/MovieContext";
+import ModalTrailer from "./components/ModalTrailer";
+
+// Separate Komponente, um den Context zu nutzen
+const GlobalModal = () => {
+  const { showModal, selectedMovie, closeModal } = useMovieContext();
+
+  // Modal rendern wenn es geöffnet ist und ein Film ausgewählt wurde
+  if (showModal && selectedMovie) {
+    return <ModalTrailer movie={selectedMovie} onClose={closeModal} />;
+  }
+  return null;
+};
 
 function App() {
   return (
@@ -17,6 +29,7 @@ function App() {
               <Route path="/favorites" element={<Favorites />} />
             </Routes>
           </div>
+          <GlobalModal />
         </div>
       </MovieProvider>
     </>
