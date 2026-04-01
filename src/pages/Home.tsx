@@ -4,6 +4,7 @@ import { searchMovies, getPopularMovies } from "../services/api";
 import { IoSearch } from "react-icons/io5";
 import ModalTrailer from "../components/ModalTrailer";
 import { Movie } from "../lib/types";
+import HeroSection from "../components/HeroSection";
 
 function Home() {
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -61,12 +62,6 @@ function Home() {
     }
   };
 
-  // // Genre Filterung
-  // const handleGenreFilter = (genreId) => {
-  //   if (!genreId) {
-  //     return loadPopularMovies();
-  //   }
-
   // Modal-Funktionen
   const openModalWithMovie = (movie: Movie) => {
     setSelectedMovie(movie);
@@ -81,6 +76,7 @@ function Home() {
   return (
     <div className=" bg-gray-100 dark:bg-gray-900 p-4">
       <div className="max-w-4xl mx-auto">
+        <HeroSection />
         <form onSubmit={handleSearch} className="max-w-sm mx-auto mt-8">
           <div className="flex">
             <input
